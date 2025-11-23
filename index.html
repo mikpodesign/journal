@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="el" data-mood="calm">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Slow Aura – Το ήσυχο σημείο της ημέρας σου</title>
+  <meta name="theme-color" content="#A3B18A" />
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+  <style>
+    :root{
+      --bg-from:#F8F5F0; --bg-via:#EEF3EA; --bg-to:#E7EFE7; --ink:#2B2B2B;
+      --accent:#6b705c; --card:#ffffff; --muted:#6b705c; --ring:#d6d3ce;
+      --radius:16px; --shadow:0 8px 24px rgba(0,0,0,.06);
+    }
+    html[data-mood="calm"]      { --bg-from:#F8F5F0; --bg-via:#EEF3EA; --bg-to:#E7EFE7; --ink:#2B2B2B; --accent:#6b705c; }
+    html[data-mood="grateful"]  { --bg-from:#FFF6E5; --bg-via:#FAF3E7; --bg-to:#F5EDDD; --ink:#3A2E1E; --accent:#b08968; }
+    html[data-mood="energetic"] { --bg-from:#E9F7EF; --bg-via:#E4F3EB; --bg-to:#E0EFE7; --ink:#183A35; --accent:#2a9d8f; }
+    html[data-mood="sad"]       { --bg-from:#E8ECF7; --bg-via:#E7ECF4; --bg-to:#E6EAF1; --ink:#24324F; --accent:#5a6ea6; }
+    html[data-mood="stressed"]  { --bg-from:#FDECEB; --bg-via:#FBE9E7; --bg-to:#F7E5E1; --ink:#5A2A2A; --accent:#9b2226; }
+    html[data-mood="tired"]     { --bg-from:#F3EFE7; --bg-via:#F1EDE5; --bg-to:#EEE9E0; --ink:#3b3b3b; --accent:#7f7f7f; }
+    html[data-mood="confused"]  { --bg-from:#F6EFE6; --bg-via:#F4EDE4; --bg-to:#F1E9DF; --ink:#4a3a2f; --accent:#8a5a44; }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      color:var(--ink);
+      background:linear-gradient(135deg,var(--bg-from),var(--bg-via),var(--bg-to));
+      transition:background .4s ease,color .2s ease;
+    }
+
+    .topbar{position:sticky;top:0;z-index:20;display:flex;gap:12px;align-items:center;justify-content:space-between;
+      padding:10px 12px;background:rgba(255,255,255,.75);backdrop-filter:blur(10px);border-bottom:1px solid #ece8df}
+    .brand{display:flex;gap:10px;align-items:center}
+    .logo{font-size:22px}
+    .title{font-weight:800;line-height:1}
+    .subtitle{font-size:12px;color:var(--muted)}
+    .right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .tab{border:1px solid var(--ring);background:#fff;padding:8px 12px;border-radius:12px;cursor:pointer;font-weight:600}
+    .tab.active{background:var(--bg-from);border-color:var(--accent);color:#111}
+    .tab-ghost{background:transparent;border:1px dashed var(--ring);color:var(--accent);font-weight:700}
+
+    .btn{border:1px solid var(--ring);background:#fff;padding:8px 12px;border-radius:12px;cursor:pointer;font-weight:700}
+    .btn-primary{background:var(--accent);color:#fff;border:none}
+    .btn-ghost{background:#fff;border:1px solid var(--ring)}
+    .btn-danger{background:#b3261e;color:#fff;border:none}
+
+    /* ΜΟΝΑΔΙΚΟ login χρώμα (μπλε→τιρκουάζ) */
+    .btn-login{
+      border:none; color:#fff; font-weight:800;
+      background:linear-gradient(135deg,#0066ff,#00d4d4);
+      box-shadow:0 6px 18px rgba(0,128,200,.25);
+    }
+    .btn-login:hover{ filter:brightness(1.05); transform:translateY(-1px) }
+
+    .hero{width:100%}
+    .hero-inner{max-width:1100px;margin:0 auto;padding:18px 12px 8px}
+    .quote{font-size:clamp(18px,2.2vw,24px);margin:6px 0 8px}
+    .mood-line{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .mood-pill{display:inline-block;border:1.5px solid var(--accent);padding:6px 10px;border-radius:999px;font-size:14px;color:var(--accent)}
+
+    .container{max-width:1200px;margin:0 auto;padding:12px}
+    .grid{display:grid;gap:12px;grid-template-columns:1fr}
+    @media(min-width:880px){.grid{grid-template-columns:1.1fr 1fr}}
+    @media(min-width:1200px){.grid{grid-template-columns:repeat(3,1fr)}}
+
+    .card{background:var(--card);border:1px solid #ece8df;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+    .card-head{padding:14px 16px;border-bottom:1px solid #efe9df;display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .card-head h2{margin:0;font-size:18px}
+    .card-body{padding:14px 16px}
+    .list{list-style:none;padding:0;margin:10px 0 0;display:grid;gap:10px}
+    .list li{background:#fffefb;border:1px solid #eee4d9;border-left:4px solid var(--accent);padding:10px 12px;border-radius:10px}
+
+    .input{width:100%;min-height:100px;padding:12px;border-radius:12px;border:1px solid #ddd;resize:vertical;font:inherit;background:#fffefc;color:#2b2b2b}
+    .input.small{min-height:48px}
+    .color-input{width:120px;height:44px;border-radius:12px;border:1px solid var(--ring);background:#fff;cursor:pointer}
+    .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .muted{color:#777;font-size:12px}
+
+    .focus-buttons{align-items:center}
+    .focus-tab.active{border-color:var(--accent);color:var(--accent);background:var(--bg-from)}
+    .focus-panel{margin-top:10px}
+
+    .stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+    .stat{
+      background:linear-gradient(135deg,var(--bg-from),#ffffff);
+      border:1px solid var(--ring);
+      border-radius:12px;
+      padding:10px;
+      box-shadow:0 6px 16px rgba(0,0,0,.04);
+    }
+    .stat-label{color:var(--muted);font-size:12px;margin-bottom:4px}
+    .stat-value{font-weight:800;font-size:18px}
+    .stat-note{color:#555;font-size:13px;margin-top:4px;white-space:pre-wrap}
+
+    .question-shell{display:flex;flex-direction:column;gap:8px}
+    .question-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+    .pill{background:var(--bg-from);border:1px solid var(--ring);color:var(--muted);padding:6px 10px;border-radius:999px;font-weight:700;font-size:12px}
+    .question-main{font-size:18px;font-weight:800;margin:6px 0;color:#1e1e1e}
+    .question-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+    .icon-btn{width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:16px}
+
+    .action-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:10px}
+    .action-card{border:1px solid var(--ring);border-radius:12px;padding:10px;background:linear-gradient(140deg,#fffefb,rgba(255,255,255,0.7));box-shadow:0 4px 10px rgba(0,0,0,.04);position:relative;cursor:pointer;transition:transform .15s ease, box-shadow .15s ease}
+    .action-card:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(0,0,0,.06)}
+    .action-card.done{border-color:#6ca670;background:linear-gradient(140deg,#f2fff2,rgba(255,255,255,0.9))}
+    .action-card.locked{opacity:.65;cursor:not-allowed;box-shadow:none;background:linear-gradient(140deg,#f9f9f9,rgba(255,255,255,0.8))}
+    .action-title{font-weight:800;font-size:14px;margin-bottom:4px;color:#222;display:flex;align-items:center;gap:6px}
+    .action-desc{font-size:13px;color:#444;white-space:pre-wrap}
+    .action-tag{display:inline-block;background:var(--bg-from);border:1px solid var(--ring);border-radius:999px;padding:4px 8px;font-size:11px;color:var(--muted);margin-bottom:6px}
+    .action-check{position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:50%;border:2px solid var(--ring);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;background:#fff;color:var(--muted)}
+    .action-card.done .action-check{background:#6ca670;color:#fff;border-color:#6ca670}
+    .action-note{width:100%;min-height:64px;margin-top:8px;border:1px dashed var(--ring);border-radius:10px;padding:8px;font:inherit}
+    .action-lock{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:#a45c5c;font-weight:700}
+
+    @media(max-width:820px){
+      .topbar{flex-direction:column;align-items:flex-start;position:sticky;top:0}
+      .right{width:100%;justify-content:space-between}
+      .tabs{width:100%;flex-wrap:nowrap;overflow:auto}
+      .tab{white-space:nowrap}
+      .hero-inner{padding:14px 12px}
+      .grid{grid-template-columns:1fr}
+      .stat-row{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+    }
+
+    .overlay{position:fixed;inset:0;background:rgba(233,239,231,.95);display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:100}
+    .overlay.show{display:flex}
+    .bubble{width:130px;height:130px;border-radius:999px;background:#a3b18a;opacity:.9;animation:breathe 6s ease-in-out infinite}
+    .overlay-text{color:#455043;font-weight:700}
+    @keyframes breathe{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.3);opacity:1}}
+
+    .timeline{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+    .tl-item{display:flex;gap:6px;align-items:center;border:1px solid var(--ring);background:#fff;border-radius:999px;padding:4px 8px;font-size:12px}
+    .tl-dot{width:10px;height:10px;border-radius:999px;background:var(--accent)}
+
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.25);display:none;align-items:flex-end;justify-content:center;padding:16px;z-index:101}
+    .modal.show{display:flex}
+    .sheet{width:100%;max-width:680px;background:#fff;border:1px solid #ece8df;border-radius:16px 16px 12px 12px;box-shadow:var(--shadow);padding:14px}
+    .sheet h3{margin:6px 0 12px}
+    .mood-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+    @media(min-width:520px){.mood-grid{grid-template-columns:repeat(3,1fr)}}
+    @media(min-width:860px){.mood-grid{grid-template-columns:repeat(4,1fr)}}
+    .mood-chip{border:1.5px solid #cfd8c7;background:#fff;padding:10px 12px;border-radius:12px;cursor:pointer;font-weight:700;text-align:center}
+
+    .chat{display:flex;flex-direction:column;gap:10px}
+    .chat-log{border:1px solid #eee4d9;background:#fffefb;border-radius:12px;padding:10px;max-height:360px;overflow:auto}
+    .bubble-u{align-self:flex-end;background:#0066ff;color:#fff;border-radius:12px 12px 4px 12px;padding:8px 10px;max-width:75%}
+    .bubble-b{align-self:flex-start;background:#eef3ea;border:1px solid #dfe6da;color:#2b2b2b;border-radius:12px 12px 12px 4px;padding:8px 10px;max-width:75%}
+    .chat-input{display:flex;gap:8px}
+    .chat-input input{flex:1;padding:10px;border:1px solid #ddd;border-radius:10px}
+
+    .footer{text-align:center;color:#7a7a7a;font-size:12px;padding:18px;border-top:1px solid #ece8df;background:#fffefb}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">🕊️</span>
+      <div>
+        <div class="title">Slow Aura</div>
+        <div class="subtitle">Το ήσυχο σημείο της ημέρας σου</div>
+      </div>
+    </div>
+
+    <div class="right">
+      <span id="userBadge" class="muted">Επισκέπτης</span>
+      <button id="loginBtn" class="btn btn-login">Σύνδεση</button>
+      <button id="logoutBtn" class="btn btn-ghost" style="display:none">Αποσύνδεση</button>
+
+      <nav class="tabs" id="tabs">
+        <button class="tab active" data-tab="home">Αρχική</button>
+        <button class="tab" id="moodNav">Πώς νιώθεις;</button>
+        <button class="tab" data-tab="journal">Ημερολόγιο</button>
+        <button class="tab" data-tab="music">Μουσική</button>
+        <button class="tab" data-tab="chat">Συνομιλία</button>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <p class="quote" id="quote">“Η ηρεμία δεν είναι απουσία ήχου, αλλά παρουσία ισορροπίας.”</p>
+      <div class="mood-line">
+        <span class="mood-pill" id="moodPill">Διάθεση: Ήρεμος</span>
+      </div>
+      <div class="timeline" id="moodTimeline"></div>
+      <p class="muted" id="affirm">Φράση ενδυνάμωσης: Αξίζω ηρεμία και καλοσύνη.</p>
+    </div>
+  </section>
+
+    <main class="container">
+    <div class="grid" id="view-home">
+      <section class="card" style="grid-column:1/-1" id="focusCard">
+        <div class="card-head"><h2>Εστίαση ευεξίας</h2></div>
+        <div class="card-body">
+          <div class="row focus-buttons">
+            <button class="btn btn-ghost focus-tab active" data-focus="mind">Σκέψεις</button>
+            <button class="btn btn-ghost focus-tab" data-focus="body">Σώμα</button>
+            <button class="btn btn-ghost focus-tab" data-focus="soul">Ψυχή</button>
+            <span class="muted">Διάλεξε τι χρειάζεσαι τώρα</span>
+          </div>
+
+          <div class="focus-panel" data-focus="mind">
+            <div class="row" style="margin-bottom:10px">
+              <textarea id="journalText" class="input" placeholder="Γράψε σκέψεις, ιδέες ή κάτι που έζησες σήμερα…"></textarea>
+              <div style="display:flex;flex-direction:column;gap:8px;min-width:200px">
+                <button class="btn btn-primary" id="saveJournal">Αποθήκευση</button>
+                <span class="muted" id="journalCount">0 καταχωρήσεις</span>
+              </div>
+            </div>
+            <ul id="journalList" class="list" style="margin-top:10px"></ul>
+            <div class="card" style="margin-top:12px">
+              <div class="card-head"><h2>Συμβουλή για τις Σκέψεις</h2><span class="pill">Προσαρμοσμένο στη διάθεση</span></div>
+              <div class="card-body">
+                <p id="mindTip">Μίλησε ευγενικά στον εαυτό σου. Η φωνή μέσα σου χρειάζεται φροντίδα.</p>
+                <div class="action-grid" data-actions="mind"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="focus-panel" data-focus="body" style="display:none">
+            <div class="card" style="margin-bottom:12px">
+              <div class="card-head"><h2>Μικρή πρακτική σώματος</h2><span class="pill">Συντονισμένο με τη διάθεση</span></div>
+              <div class="card-body">
+                <p id="bodyTip">Πιες νερό, κάνε 2 διατάσεις και άφησε για λίγο το κινητό.</p>
+                <div class="action-grid" data-actions="body"></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head"><h2>Ύπνος</h2><span class="pill">3 ιδέες γρήγορα</span></div>
+              <div class="card-body">
+                <ul class="list">
+                  <li>Σταθερή ώρα ύπνου.</li>
+                  <li>Χαμηλό φως 60′ πριν.</li>
+                  <li>Μικρή τελετουργία: κερί ή λεβάντα.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="focus-panel" data-focus="soul" style="display:none">
+            <div class="card">
+              <div class="card-head"><h2>Ψυχή & Αρώματα</h2><span class="pill">Μίνι τελετουργίες</span></div>
+              <div class="card-body">
+                <p id="soulTip">Άναψε κερί λεβάντας και αφιέρωσε 3′ στη σιωπή.</p>
+                <div class="action-grid" data-actions="soul"></div>
+                <ul class="list" style="margin-top:8px">
+                  <li><b>Λεβάντα</b> — άγχος/ύπνος</li>
+                  <li><b>Γλυκό Πορτοκάλι</b> — ανεβασμένη διάθεση</li>
+                  <li><b>Δεντρολίβανο</b> — συγκέντρωση</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Εστίαση ευεξίας — Ερωτήσεις</h2>
+          <div class="pill" id="questionStep">1/5</div>
+        </div>
+        <div class="card-body">
+          <div class="question-shell">
+            <div class="question-meta">
+              <p id="dailyQ" class="question-main">Τι σε έκανε να χαμογελάσεις σήμερα; 😊</p>
+              <div class="question-actions">
+                <button class="btn btn-ghost icon-btn" id="prevQuestion" aria-label="Προηγούμενη ερώτηση">←</button>
+                <button class="btn btn-ghost icon-btn" id="nextQuestion" aria-label="Επόμενη ερώτηση">→</button>
+                <span class="muted">Απαντάς μία-μία χωρίς να χάνεις τις προηγούμενες σημειώσεις.</span>
+              </div>
+            </div>
+            <textarea id="ansInput" class="input" placeholder="Γράψε εδώ…"></textarea>
+            <div class="row" style="justify-content:flex-end">
+              <button class="btn btn-primary" id="saveAnswer">Αποθήκευση απάντησης</button>
+            </div>
+          </div>
+          <ul id="answersList" class="list" style="margin-top:10px"></ul>
+        </div>
+      </section>
+
+      <section class="card" id="calmCard" style="display:none">
+        <div class="card-head"><h2>Μικρή πράξη ηρεμίας</h2></div>
+        <div class="card-body">
+          <p id="homeTip">Κλείσε για 30″ τα μάτια και πάρε 3 αργές αναπνοές.</p>
+          <div class="row" style="margin-top:8px">
+            <button class="btn btn-ghost" id="calmNowBtn">🌿 Ηρεμία τώρα (4-7-8)</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" style="grid-column:1/-1" id="snapshotCard">
+        <div class="card-head"><h2>Στιγμιότυπο διάθεσης</h2></div>
+        <div class="card-body">
+          <div class="row" style="align-items:center;gap:16px;flex-wrap:wrap">
+            <div>
+              <div class="stat-label">Τρέχουσα διάθεση</div>
+              <div class="stat-value" id="moodCurrent">Ήρεμος</div>
+              <div class="stat-note" id="moodNotePreview"></div>
+            </div>
+            <div>
+              <div class="stat-label">Τελευταία ώρα</div>
+              <div class="stat-value" id="moodLast">—</div>
+              <div class="stat-note" id="moodLastTime">Χωρίς δεδομένα</div>
+            </div>
+            <div>
+              <div class="stat-label">Καταγραφές</div>
+              <div class="stat-value" id="moodEntriesCount">0</div>
+            </div>
+            <button class="btn btn-primary" id="jumpToMood">Ενημέρωση διάθεσης</button>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="grid" id="view-journal" style="display:none">
+      <section class="card" style="grid-column:1/-1">
+        <div class="card-head"><h2>📝 Ημερολόγιο — Σκέψεις, Σημειώσεις & Απαντήσεις</h2></div>
+        <div class="card-body">
+          <div class="card" style="margin-bottom:12px">
+            <div class="card-head"><h2>Σημειώσεις / Αναμνήσεις</h2><span class="pill">Αποθήκευση στη συσκευή</span></div>
+            <div class="card-body">
+              <p class="muted">Γράψε ελεύθερα υπενθυμίσεις, αναμνήσεις ή ό,τι νιώθεις. Αποθηκεύονται τοπικά και μπορείς να πάρεις αντίγραφο ή να τα στείλεις στο email σου.</p>
+              <textarea id="memoryText" class="input" placeholder="Σημείωσε εδώ μια στιγμή, μια ιδέα ή κάτι που δεν θέλεις να ξεχάσεις…"></textarea>
+              <div class="row" style="margin-top:8px">
+                <button class="btn btn-primary" id="saveMemory">Αποθήκευση σημείωσης</button>
+                <button class="btn btn-ghost" id="downloadMemories">Λήψη αντιγράφου (.txt)</button>
+                <button class="btn btn-ghost" id="emailMemories">Σύνθεση email</button>
+                <span class="muted" id="memoryCount">0 σημειώσεις</span>
+              </div>
+              <ul id="memoriesList" class="list" style="margin-top:10px"></ul>
+            </div>
+          </div>
+          <div class="row" style="margin-bottom:10px">
+            <input id="searchAll" class="input" style="min-height:auto" placeholder="Αναζήτηση…" />
+            <select id="typeFilter" class="btn-ghost" style="padding:10px;border-radius:10px;border:1px solid var(--ring)">
+              <option value="all">Όλα</option>
+              <option value="thought">Σκέψεις</option>
+              <option value="note">Σημειώσεις</option>
+              <option value="memory">Αναμνήσεις</option>
+            </select>
+          </div>
+          <ul id="journalAllList" class="list"></ul>
+          <p id="journalEmpty" class="muted" style="display:none;text-align:center;padding:16px">Δεν υπάρχουν καταγραφές ακόμα.</p>
+        </div>
+      </section>
+    </div>
+
+    <div class="grid" id="view-music" style="display:none">
+      <section class="card" style="grid-column:1/-1">
+        <div class="card-head"><h2>Μουσική & Ήχοι ηρεμίας</h2><span class="pill">Δωρεάν επιλογές</span></div>
+        <div class="card-body">
+          <p class="muted">Σύνδεσμοι που ανοίγουν σε νέο tab. Επίλεξε playlist με βάση το συναίσθημα.</p>
+          <div class="list" id="musicList"></div>
+        </div>
+      </section>
+      <section class="card">
+        <div class="card-head"><h2>🔒 Premium ήχοι</h2><span class="pill">Σύντομα</span></div>
+        <div class="card-body">
+          <p class="muted">Κράτησα μερικά soundscapes κλειδωμένα για μελλοντική συνδρομή. Θα εμφανιστούν εδώ όταν ενεργοποιηθεί.</p>
+          <ul class="list">
+            <li>Κύματα θάλασσας 60′</li>
+            <li>Βροχή σε παράθυρο</li>
+            <li>Deep focus λούπα</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+
+    <div class="grid" id="view-chat" style="display:none">
+      <section class="card" style="grid-column:1/-1">
+        <div class="card-head"><h2>Συνομιλία</h2></div>
+        <div class="card-body">
+          <div class="chat">
+            <div id="chatLog" class="chat-log"></div>
+            <div class="chat-input">
+              <input id="chatInput" placeholder="Γράψε εδώ…" />
+              <button id="chatSend" class="btn btn-primary">Αποστολή</button>
+            </div>
+            <p class="muted">Ο βοηθός προσαρμόζει τον τόνο του ανάλογα με τη διάθεσή σου. Τα μηνύματα στέλνονται με ασφάλεια στη λειτουργία χωρίς διακομιστή.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">© <span id="year"></span> Slow Aura • Μια ήρεμη γωνιά στο χάος</footer>
+
+  <div class="overlay" id="calmOverlay">
+    <div class="bubble"></div>
+    <p class="overlay-text">Εισπνοή 4 • Κράτημα 7 • Εκπνοή 8</p>
+  </div>
+
+  <div class="modal" id="moodModal">
+    <div class="sheet">
+      <h3>Διάλεξε διάθεση</h3>
+      <div class="mood-grid" id="moodGrid"></div>
+      <div class="row" style="margin-top:10px;gap:8px;align-items:flex-start">
+        <input id="customMoodLabel" class="input small" placeholder="Πρόσθεσε δική σου διάθεση (π.χ. ενθουσιασμένος)" />
+        <input id="customMoodColor" type="color" class="color-input" value="#8e7cc3" aria-label="Επιλογή χρώματος διάθεσης" />
+        <button class="btn btn-primary" id="addCustomMood">Προσθήκη</button>
+      </div>
+      <p class="muted" style="margin:6px 0 0">Δώσε όνομα και χρώμα για να μείνει στη λίστα σου με ξεχωριστή απόχρωση.</p>
+      <div class="row" style="margin-top:10px">
+        <input id="moodNote" class="input" style="min-height:auto" placeholder="Προαιρετικό σχόλιο (τι συνέβη;)" />
+      </div>
+      <div style="margin-top:10px;display:flex;justify-content:flex-end">
+        <button class="btn-ghost" id="closeMood">Κλείσιμο</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ΟΛΟ το app σε ES Module για να λειτουργούν imports -->
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+    // --- Identity (Netlify) ---
+    const identity = window.netlifyIdentity;
+    let currentUser = null;
+
+    function userKey(prefix){
+      const email = currentUser?.email || "anonymous";
+      return `slowaura:${email}:${prefix}`;
+    }
+
+    // Θα φορτώσουμε URL/KEY Supabase από serverless function (ασφαλές για anon)
+    let supabase = null;
+    async function initSupabase() {
+      try {
+        const res = await fetch("/.netlify/functions/env");
+        const { url, key } = await res.json();
+        if (!url || !key) throw new Error("Λείπουν τα στοιχεία του Supabase");
+        supabase = createClient(url, key);
+      } catch (e) {
+        console.warn("Σφάλμα αρχικοποίησης Supabase", e);
+      }
+    }
+
+    // Δεδομένα
+    const QUOTES = [
+      "Η ηρεμία δεν είναι απουσία ήχου, αλλά παρουσία ισορροπίας.",
+      "Μια βαθιά ανάσα αλλάζει περισσότερα απ’ ό,τι νομίζεις.",
+      "Άφησε ό,τι σε βαραίνει να πέσει σαν φύλλο.",
+      "Η σιωπή είναι χώρος, όχι κενό.",
+      "Το φως υπάρχει πάντα – κάποτε έχει σύννεφα.",
+      "Ο ρυθμός σου είναι αρκετός.",
+      "Μικρά βήματα οδηγούν σε μεγάλα μονοπάτια.",
+      "Σήμερα μπορείς να είσαι απλώς εδώ.",
+      "Η καλοσύνη προς εσένα είναι καύσιμο, όχι πολυτέλεια.",
+      "Κάθε ανάσα είναι μια αρχή.",
+      "Η ευγνωμοσύνη μεγαλώνει ό,τι αγγίζει.",
+      "Κοίτα πόσο έχεις αντέξει μέχρι σήμερα.",
+      "Η ησυχία είναι σπίτι, όχι φυλακή.",
+      "Άσε το σώμα να σε καθοδηγήσει για λίγο.",
+      "Δεν χρειάζεται να λύσεις τα πάντα απόψε.",
+      "Ένα χαμόγελο στο σώμα: χαλάρωσε τους ώμους.",
+      "Η ανάσα είναι το πιο κοντινό κουμπί παύσης.",
+      "Ηρεμώ δεν σημαίνει παραιτούμαι.",
+      "Άκου τη φωνή που σε αγαπά, όχι εκείνη που σε μειώνει.",
+      "Οι σκέψεις περνούν, δεν είσαι οι σκέψεις.",
+      "Το σώμα θυμάται ότι αξίζεις ανάπαυση.",
+      "Ένα μικρό «ευχαριστώ» αλλάζει το χρώμα της μέρας.",
+      "Η φροντίδα είναι πράξη θάρρους.",
+      "Κλείσε τα μάτια: ποιο χρώμα νιώθεις τώρα;",
+      "Οι απαντήσεις συχνά έρχονται μετά τη σιωπή.",
+      "Το να επιβραδύνεις είναι παραγωγικό.",
+      "Ορίζεις εσύ το νόημα του σήμερα.",
+      "Μπορείς να είσαι ταυτόχρονα δυνατός και κουρασμένος.",
+      "Δώσε χρόνο στο σώμα να σε ευχαριστήσει.",
+      "Η τρυφερότητα είναι επανάσταση.",
+      "Στις παύσεις ανθίζει η διαύγεια.",
+      "Είναι εντάξει να μην έχεις απάντηση.",
+      "Το χαμόγελο του ήλιου υπάρχει και πίσω από τα σύννεφα.",
+      "Μην υποτιμάς τη δύναμη μιας μικρής ανάσας.",
+      "Κάθε μέρα δικαιούσαι ένα λεπτό καθαρής γαλήνης."
+    ];
+    const AFFIRM = [
+      "Αξίζω ηρεμία και καλοσύνη.",
+      "Επιλέγω μικρά βήματα με συνέπεια.",
+      "Σέβομαι τα όριά μου και ξεκουράζομαι.",
+      "Σήμερα είμαι τρυφερός με τον εαυτό μου.",
+      "Αφήνω τον έλεγχο και κρατώ την πρόθεση."
+    ];
+    const SELF_QUESTIONS = [
+      "Τι σε δυσκόλεψε σήμερα και τι έμαθες;",
+      "Τι σε έκανε περήφανο τις τελευταίες 24 ώρες;",
+      "Ποιο μικρό πράγμα αξίζει ευγνωμοσύνη τώρα;",
+      "Ποια σκέψη χρειάζεται να αφήσεις;",
+      "Ποιο είναι το επόμενο μικρό βήμα σου;",
+      "Ποιο όριο θέλεις να τιμήσεις σήμερα;",
+      "Τι χρειάζεται αποφόρτιση;",
+      "Ποια μικρή χαρά θέλεις να κλείσεις στο πρόγραμμα;",
+      "Ποιο συναίσθημα κυριαρχεί τώρα;",
+      "Τι θα έλεγες σε έναν φίλο που νιώθει το ίδιο;",
+      "Πού στο σώμα κρατάς ένταση;",
+      "Τι μικρό μπορείς να αναβάλεις για αργότερα;",
+      "Τι χρειάζεται φως σήμερα;",
+      "Ποιο είναι το ένα πράγμα που θες να θυμάσαι αύριο;",
+      "Τι θα έκανες αν είχες 10% περισσότερη ενέργεια;",
+      "Ποιο όνειρο αξίζει μία πρόταση σήμερα;",
+      "Τι θα πει για σένα η αυριανή σου εκδοχή;",
+      "Τι θέλεις να σταματήσεις να κουβαλάς;",
+      "Ποιες τρεις λέξεις περιγράφουν τη μέρα;",
+      "Τι σε γείωσε πιο πολύ;",
+      "Πώς θα έμοιαζε μια καλή ανάπαυση απόψε;",
+      "Ποιο κομμάτι του εαυτού σου χρειάζεται φροντίδα;",
+      "Ποιο μήνυμα θέλεις να στείλεις στον εαυτό σου σε ένα χρόνο;",
+      "Ποια στιγμή γαλήνης θα επαναλάβεις;",
+      "Ποια συνήθεια σε βοηθά περισσότερο τώρα;",
+      "Τι θα άφηνες αν ήξερες ότι όλα θα πάνε καλά;",
+      "Ποιος ήχος ή άρωμα σε ηρεμεί;",
+      "Ποιες 3 αναπνοές μπορείς να πάρεις τώρα;",
+      "Ποιο είναι το δώρο της σημερινής δυσκολίας;",
+      "Πώς θα περιέγραφες τον καιρό μέσα σου;",
+      "Ποια κίνηση του σώματος σου ζητά να κάνεις;",
+      "Τι σημαίνει επιτυχία για σένα σήμερα;",
+      "Τι θα άλλαζες αν είχες περισσότερο θάρρος;",
+      "Πού χρειάζεσαι περισσότερη συμπόνια;"
+    ];
+    const BASE_MOODS = {
+      calm:      { label:"Ήρεμος", accent:'#6b705c' },
+      stressed:  { label:"Αγχωμένος", accent:'#9b2226' },
+      tired:     { label:"Κουρασμένος", accent:'#7f7f7f' },
+      grateful:  { label:"Ευγνώμων", accent:'#b08968' },
+      energetic: { label:"Ενεργητικός", accent:'#2a9d8f' },
+      sad:       { label:"Στεναχωρημένος", accent:'#5a6ea6' },
+      confused:  { label:"Μπερδεμένος", accent:'#8a5a44' },
+    };
+
+    const BASE_MOOD_THEMES = {
+      calm:      { bgFrom:'#F8F5F0', bgVia:'#EEF3EA', bgTo:'#E7EFE7', ink:'#2B2B2B', accent:'#6b705c' },
+      grateful:  { bgFrom:'#FFF6E5', bgVia:'#FAF3E7', bgTo:'#F5EDDD', ink:'#3A2E1E', accent:'#b08968' },
+      energetic: { bgFrom:'#E9F7EF', bgVia:'#E4F3EB', bgTo:'#E0EFE7', ink:'#183A35', accent:'#2a9d8f' },
+      sad:       { bgFrom:'#E8ECF7', bgVia:'#E7ECF4', bgTo:'#E6EAF1', ink:'#24324F', accent:'#5a6ea6' },
+      stressed:  { bgFrom:'#FDECEB', bgVia:'#FBE9E7', bgTo:'#F7E5E1', ink:'#5A2A2A', accent:'#9b2226' },
+      tired:     { bgFrom:'#F3EFE7', bgVia:'#F1EDE5', bgTo:'#EEE9E0', ink:'#3b3b3b', accent:'#7f7f7f' },
+      confused:  { bgFrom:'#F6EFE6', bgVia:'#F4EDE4', bgTo:'#F1E9DF', ink:'#4a3a2f', accent:'#8a5a44' },
+    };
+
+    const CALM_ONLY_MOODS = ['stressed','sad','confused','tired'];
+    const MUSIC_LINKS = [
+      { title:'Απαλή συγκέντρωση', mood:['calm','confused'], url:'https://www.youtube.com/watch?v=jfKfPfyJRdk', note:'lofi chill' },
+      { title:'Αναπνοές & γείωση', mood:['stressed','sad'], url:'https://www.youtube.com/watch?v=iqAsnfdvpIs', note:'ήχοι βροχής 30′' },
+      { title:'Ενέργεια & κίνηση', mood:['energetic','grateful'], url:'https://www.youtube.com/watch?v=pXRviuL6vMY', note:'uplifting' },
+      { title:'Ύπνος & χαλάρωση', mood:['tired'], url:'https://www.youtube.com/watch?v=9E6b3swbnWg', note:'πιάνο piano' },
+      { title:'Διαύγεια', mood:['confused','calm'], url:'https://www.youtube.com/watch?v=kpSgLn2dQtU', note:'binaural soft' },
+      { title:'Καλοκαιρινό mood', mood:['grateful','energetic'], url:'https://www.youtube.com/watch?v=W3q8Od5qJio', note:'απαλά beats' }
+    ];
+
+    let MOODS = { ...BASE_MOODS };
+    let MOOD_THEMES = { ...BASE_MOOD_THEMES };
+    const MOOD_TIPS = {
+      calm:{ home:["Πάρε 3 αργές αναπνοές.","Άκου 2′ ήχους φύσης.","Κράτα μια στάση ευγνωμοσύνης 10″."],
+             mind:["Γράψε 3 πράγματα που πάνε καλά.","Σύντομο σκανάρισμα σώματος 1′.","Σημείωσε μια μικρή καλοσύνη."],
+             body:["Νερό + τέντωμα αυχένα.","Περπάτημα 5′.","Διατάσεις ισχίων 1′."],
+             soul:["Άναψε κερί, παρατήρησε φλόγα.","Διάβασε ήρεμο απόφθεγμα.","Σταγόνα λεβάντα."] },
+      stressed:{ home:["3× 4-7-8 αναπνοές.","Γράψε όλα, κύκλωσε 1 σημαντικό.","Χρονόμετρο 2′: ‘τίποτα’. "],
+                 mind:["3 επαναλαμβανόμενες σκέψεις.","Επείγον ή αγχώδες;","Σπάσε σε βήματα."],
+                 body:["Περπάτημα 5′.","Νερό + 1′ διατάσεις.","Βαθιά εκπνοή ‘φφφ’. "],
+                 soul:["2′ σιωπή.","Λεβάντα στον καρπό.","Ήχοι βροχής 3′."] },
+      tired:{ home:["Διάλειμμα 3′ χωρίς κινητό.","Κοίτα μακριά 20″.","Μείωσε φως/ήχο."],
+              mind:["‘Τι χρειάζομαι τώρα;’ μία λέξη.","Λιγότερη κριτική, περισσότερη τρυφερότητα.","Σημείωσε 1 μικρή νίκη."],
+              body:["Ζεστό ρόφημα.","Άπλωσε πλάτη 2′.","Κλείσε μάτια 2′."],
+              soul:["Ήπια μουσική.","Χαμομήλι/λεβάντα.","Φράση: ‘σήμερα αρκεί αυτό’."] },
+      grateful:{ home:["Στείλε ‘ευχαριστώ’.","Κράτα αγαπημένη εικόνα 10″.","Κάνε ένα κομπλιμέντο."],
+                 mind:["3 ευγνωμοσύνες.","Πρόθεση ‘ήπια παρουσία’.","Τι πήγε καλύτερα απ’ όσο περίμενες;"],
+                 body:["Διάταση με χαμόγελο.","Φρούτο ή ξηροί καρποί.","Περπάτημα απόλαυσης."],
+                 soul:["Ανασκόπηση καλού.","Μικρή προσευχή/ευχή.","Μοίρασε καλοσύνη."] },
+      energetic:{ home:["Χόρεψε 30″.","1 μικρός στόχος τώρα.","Σύντομο σπριντ συγκέντρωσης 5′."],
+                  mind:["3 ιδέες → 1 δράση.","2′ συγκέντρωση στην αναπνοή.","Μικρό πείραμα."],
+                  body:["10 καθίσματα ή 20″ άλματα με άνοιγμα χεριών και ποδιών.","Γρήγορο περπάτημα 5′.","Κρύο νερό στο πρόσωπο."],
+                 soul:["Μουσική έμπνευσης.","Πρόθεση δράσης.","Μοίρασε ενέργεια."] },
+      sad:{ home:["Πίεσε στέρνο και ανάπνευσε αργά.","Κοίτα έξω 1′.","Στείλε μήνυμα σε δικό σου άνθρωπο."],
+            mind:["Γράψε τι νιώθεις.","Φράση: ‘είμαι εδώ για εμένα’.","Δεν χρειάζεται λύση τώρα."],
+            body:["Ζεστό ρόφημα/κουβέρτα.","Απαλές διατάσεις.","Ζεστό μπάνιο."],
+            soul:["Ήχοι βροχής.","Απαλό φως/κερί.","Κρύσταλλος αγαπημένος."] },
+      confused:{ home:["3 σύντομα σημεία ‘τι με μπερδεύει’.","1 μικρό βήμα δοκιμής.","Σίγουρα/Ίσως/Όχι τώρα."],
+                 mind:["Δύο επιλογές με υπέρ/κατά.","2′ αναπνοή πριν απόφαση.","Ρώτα άνθρωπο-πυξίδα."],
+                 body:["Περπάτημα διαύγειας 5′.","Νερό + 3 ανάσες.","Απλό σνακ."],
+                 soul:["Πρόθεση: ‘να φανεί το επόμενο βήμα’.","Άνοιξε παράθυρο.","Σημείωση: ‘ό,τι κι αν γίνει, θα το φροντίσω’."] }
+    };
+
+    const MOOD_ACTIONS = {
+      calm:{
+        mind:[
+          { title:'Γείωση 2′', desc:'Κλείσε μάτια, μέτρα 4 ανάσες και σημείωσε μία σκέψη που ηρέμησε.', input:true },
+          { title:'Σιωπηλή ερώτηση', desc:'Ρώτα «τι χρειάζομαι τώρα;» και γράψε μία λέξη-απάντηση.', input:true },
+          { title:'Χάρτης ευγνωμοσύνης', desc:'Σημείωσε 3 πράγματα που πήγαν καλά σήμερα.', input:true },
+          { title:'Ρουτίνα καλοσύνης', desc:'Στείλε ένα μήνυμα ευγνωμοσύνης σε κάποιον.', locked:true }
+        ],
+        body:[
+          { title:'Τέντωμα με αναπνοή', desc:'Σήκωσε χέρια στην εισπνοή, άφησε τα κάτω στην εκπνοή για 5 κύκλους.' },
+          { title:'Νερό + βήμα', desc:'Πιες 1 ποτήρι και περπάτησε 2 λεπτά μέσα στον χώρο.' },
+          { title:'Κίνηση 4 σημείων', desc:'Άγγιξε μέτωπο, καρδιά, στομάχι, γόνατα με συνειδητή ανάσα.' },
+          { title:'Στάση ανάπαυσης', desc:'Ξάπλωσε με πόδια πάνω στον καναπέ για 3′.', locked:true }
+        ],
+        soul:[
+          { title:'Μικρή ευχή', desc:'Γράψε ή ψιθύρισε μια πρόταση καλοσύνης για εσένα.', tag:'Ήπια στιγμή', input:true },
+          { title:'Μουσική 60″', desc:'Βάλε ένα απαλό κομμάτι και άκου όλη την αναπνοή σου.' },
+          { title:'Κερί προθέσεων', desc:'Άναψε κερί και ονόμασε δυνατά την πρόθεσή σου.' },
+          { title:'Premium άρωμα', desc:'Προσωπική μίξη αιθέριων ελαίων.', locked:true }
+        ]
+      },
+      stressed:{
+        mind:[
+          { title:'Γρήγορη εκφόρτιση', desc:'Κατέγραψε όλα όσα σκέφτεσαι. Κύκλωσε μόνο ένα που έχει προτεραιότητα.', input:true },
+          { title:'Κλείδωμα χρόνου', desc:'Βάλε 5′ χρονοδιακόπτη για ένα μικρό βήμα. Μετά κλείσε οθόνη για 2′.' },
+          { title:'Σημεία πίεσης', desc:'Γράψε ποια 3 πράγματα σε πιέζουν και σημείωσε τι μπορεί να μείνει για αύριο.', input:true },
+          { title:'Premium καθοδήγηση', desc:'Καθοδηγούμενη άσκηση 10′ για άγχος.', locked:true }
+        ],
+        body:[
+          { title:'Αναπνοή box 4x4', desc:'Εισπνοή 4, κράτημα 4, εκπνοή 4, κράτημα 4. Επανάλαβε 4 φορές.' },
+          { title:'Αποφόρτιση ώμων', desc:'Σήκωσε ώμους στα αυτιά, κράτα 3″, άφησε χαλαρά. 5 επαναλήψεις.' },
+          { title:'Διακοπή οθόνης', desc:'Βάλε χρονόμετρο 3′ χωρίς οθόνη και απλώς στάσου/περπάτα.' },
+          { title:'Premium ροή', desc:'Ήπιες διατάσεις με ήχο καθοδήγησης.', locked:true }
+        ],
+        soul:[
+          { title:'Διάλειμμα αισθήσεων', desc:'Παρατήρησε 5 πράγματα που βλέπεις, 4 που ακούς, 3 που αγγίζεις.' },
+          { title:'Λέξη-άγκυρα', desc:'Επίλεξε μία λέξη π.χ. «ήπια», «σταθερά» και επανάλαβέ την 10 φορές.' },
+          { title:'Σημείο ηρεμίας', desc:'Γράψε μια φράση που θα σε ηρεμήσει αν τη δεις σε ειδοποίηση.', input:true },
+          { title:'Premium ήχος', desc:'Ήχοι βροχής υψηλής ποιότητας.', locked:true }
+        ]
+      },
+      tired:{
+        mind:[
+          { title:'Ήπια ανασκόπηση', desc:'Σημείωσε 1 μικρή νίκη της ημέρας και άφησε τα υπόλοιπα για αύριο.', input:true },
+          { title:'Αναβολή σκέψεων', desc:'Γράψε σε λίστα «για αύριο» ό,τι δεν μπορεί να γίνει τώρα.', input:true },
+          { title:'Μία πρόταση', desc:'Περιέγραψε τη μέρα με μία μόνο πρόταση.', input:true },
+          { title:'Premium journaling', desc:'5 καθοδηγούμενες ερωτήσεις για κούραση.', locked:true }
+        ],
+        body:[
+          { title:'Mini reset', desc:'Κλείσε μάτια 60″, κούνησε δάχτυλα χεριών/ποδιών, άνοιξε τα χέρια σαν τέντωμα.' },
+          { title:'Ζεστό ρόφημα', desc:'Ετοίμασε ένα τσάι ή νερό με λεμόνι και πιες το αργά χωρίς κινητό.' },
+          { title:'Ήπια διάταση', desc:'Άνοιγμα θώρακα στον τοίχο για 40″.' },
+          { title:'Premium nidra', desc:'Yoga nidra 8′.', locked:true }
+        ],
+        soul:[
+          { title:'Φράση καλοσύνης', desc:'Ψιθύρισε «είμαι αρκετός/ή όπως είμαι τώρα».', tag:'Απαλότητα' },
+          { title:'Φως χαμηλό', desc:'Χαμήλωσε φώτα, άναψε κερί ή λάμπα ζεστή και μείνε 2′ σε σιωπή.' },
+          { title:'Αγκαλιά κουβέρτας', desc:'Κάλυψε ώμους/στήθος και πάρε 5 αργές αναπνοές.' },
+          { title:'Premium χαλάρωση', desc:'Καθοδηγούμενη φωνή 10′.', locked:true }
+        ]
+      },
+      grateful:{
+        mind:[
+          { title:'3 μικρές ευγνωμοσύνες', desc:'Γράψε τρία πράγματα που εκτιμάς σήμερα, όσο μικρά κι αν είναι.', input:true },
+          { title:'Μοιράσου κάτι καλό', desc:'Στείλε μήνυμα «ευχαριστώ» ή μοίρασε ένα κοπλιμέντο.' },
+          { title:'Ευγνωμοσύνη στο σώμα', desc:'Σημείωσε 3 μέλη του σώματος που σε βοήθησαν σήμερα.', input:true },
+          { title:'Premium ευχές', desc:'Καθοδηγούμενη άσκηση ευγνωμοσύνης 7′.', locked:true }
+        ],
+        body:[
+          { title:'Χαμόγελο & κίνηση', desc:'Χαμογέλα επίτηδες και κάνε 5 αργά ανοίγματα χεριών.', tag:'Ενέργεια χαράς' },
+          { title:'Γεύση με προσοχή', desc:'Φάε ένα φρούτο ή ξηρούς καρπούς αργά, προσέχοντας υφή και άρωμα.' },
+          { title:'Περπάτημα απόλαυσης', desc:'Περπάτα 5′ παρατηρώντας μόνο ό,τι σου αρέσει γύρω σου.' },
+          { title:'Premium κίνηση', desc:'Χορευτική ρουτίνα 5′.', locked:true }
+        ],
+        soul:[
+          { title:'Καρέ ευγνωμοσύνης', desc:'Δες μια αγαπημένη φωτογραφία 20″ και θυμήσου την αίσθηση εκείνης της στιγμής.' },
+          { title:'Μικρή προσφορά', desc:'Γράψε πού μπορείς να δώσεις 5′ βοήθειας ή καλοσύνης σήμερα.', input:true },
+          { title:'Κατάλογος θαυμασμού', desc:'Σημείωσε 5 πράγματα που θαυμάζεις στον εαυτό σου.', input:true },
+          { title:'Premium τελετή', desc:'Τελετή κεριού ευγνωμοσύνης.', locked:true }
+        ]
+      },
+      energetic:{
+        mind:[
+          { title:'Ιδέες σε δράση', desc:'Σημείωσε 3 ιδέες → διάλεξε 1 και κάνε το πρώτο μικρό βήμα μέσα σε 5′.', input:true },
+          { title:'Καθαρή πρόθεση', desc:'Ονόμασε τον στόχο μίας λέξης (π.χ. «δημιουργώ», «στέλνω») και ξεκίνα.' },
+          { title:'3×20 δευτερόλεπτα', desc:'Τρία μικρά σπριντ δράσης 20″: γράψε/στείλε/τακτοποίησε.' },
+          { title:'Premium focus', desc:'Καθοδήγηση για εστιασμένη εργασία 10′.', locked:true }
+        ],
+        body:[
+          { title:'Κίνηση-σπριντ', desc:'20″ jumping jacks ή 10 καθίσματα, ακολουθεί περπάτημα 3′.' },
+          { title:'Ενυδάτωση + έκταση', desc:'Πιες νερό και κάνε έκταση ώμων/στήθους με βαθιά αναπνοή.', tag:'Επαναφορά' },
+          { title:'Shake it', desc:'Κούνησε σώμα/χέρια 45″ για να φύγει έξτρα ένταση.' },
+          { title:'Premium power', desc:'Μίνι HIIT 5′.', locked:true }
+        ],
+        soul:[
+          { title:'Ρουτίνα ενθουσιασμού', desc:'Βάλε τραγούδι έμπνευσης, πάρε 3 αναπνοές και σημείωσε γιατί σε κινητοποιεί.', input:true },
+          { title:'Μοίρασμα ενέργειας', desc:'Στείλε ένα ενθαρρυντικό μήνυμα σε φίλο ή συνάδελφο.' },
+          { title:'Οραματισμός', desc:'Κλείσε μάτια και δες τον εαυτό σου να τελειώνει το επόμενο βήμα.', input:true },
+          { title:'Premium playlist', desc:'Σύνδεση με curated playlist δράσης.', locked:true }
+        ]
+      },
+      sad:{
+        mind:[
+          { title:'Χώρος συναισθήματος', desc:'Γράψε 3 προτάσεις: Τι νιώθω; Πού το νιώθω; Τι χρειάζομαι;', tag:'Αποδοχή', input:true },
+          { title:'Τρυφερή φράση', desc:'«Είμαι εδώ για εμένα, χωρίς να πιέζω λύση τώρα.»' },
+          { title:'Ημερολόγιο παρηγοριάς', desc:'Σημείωσε τι θα έλεγες σε ένα παιδί που νιώθει έτσι.', input:true },
+          { title:'Premium στήριξη', desc:'Καθοδηγούμενη πρακτική αυτοσυμπόνιας.', locked:true }
+        ],
+        body:[
+          { title:'Ζεστασιά', desc:'Ρόφημα ή κουβέρτα και 5 αργές ανάσες με έμφαση στην εκπνοή.' },
+          { title:'Ήπιο κούνημα', desc:'Κούνησε χέρια/ώμους απαλά για 30″ για να φύγει η ένταση.' },
+          { title:'Βόλτα ήλιου', desc:'Βγες για 5′ στον ήλιο ή στο φως.', },
+          { title:'Premium σωματική αγκαλιά', desc:'Καθοδηγούμενη πρακτική αγκαλιάς.', locked:true }
+        ],
+        soul:[
+          { title:'Ήχος παρηγοριάς', desc:'Άκου ήχους βροχής ή απαλή μουσική 3′ με κλειστά μάτια.' },
+          { title:'Μικρή σύνδεση', desc:'Στείλε μήνυμα σε δικό σου άνθρωπο ή γράψε κάτι που θα του έλεγες.' },
+          { title:'Σημείο ευγνωμοσύνης', desc:'Βρες ένα μικρό καλό μέσα στη μέρα και γράψτο.', input:true },
+          { title:'Premium αγάπη', desc:'Καθοδηγούμενη φράση αγάπης 5′.', locked:true }
+        ]
+      },
+      confused:{
+        mind:[
+          { title:'Χάρτης επιλογών', desc:'Φτιάξε δύο στήλες υπέρ/κατά και σημείωσε 1 μικρό πείραμα που μπορείς να δοκιμάσεις.', input:true },
+          { title:'Παύση πριν απόφαση', desc:'2′ αναπνοή με κλειστά μάτια πριν διαλέξεις το επόμενο βήμα.' },
+          { title:'Σενάριο 10%', desc:'Γράψε τι θα έκανες με 10% θάρρος παραπάνω.', input:true },
+          { title:'Premium νοητική καθαρότητα', desc:'Binaural guidance 8′.', locked:true }
+        ],
+        body:[
+          { title:'Περπάτημα διαύγειας', desc:'Βγες για 5′ κίνηση κοιτώντας μακριά. Επίστρεψε και γράψε την πρώτη σκέψη που ήρθε.', input:true },
+          { title:'Νερό & σνακ', desc:'Ένα ποτήρι νερό και ένα απλό σνακ για να επανέλθει η ενέργεια.' },
+          { title:'Διάταση αυχένα', desc:'Κύκλοι κεφαλής 30″ ανά πλευρά.' },
+          { title:'Premium ήπια κίνηση', desc:'Flow καθοδήγησης 6′.', locked:true }
+        ],
+        soul:[
+          { title:'Πρόθεση φωτεινή', desc:'Πες «θα εμφανιστεί το επόμενο βήμα, κάνω χώρο για αυτό».', tag:'Κατεύθυνση' },
+          { title:'Παράθυρο αέρα', desc:'Άνοιξε παράθυρο, πάρε 5 αναπνοές και κοίταξε τον ορίζοντα.' },
+          { title:'Μελλοντικό σημείωμα', desc:'Γράψε ένα μικρό σημείωμα στον μελλοντικό σου εαυτό.', input:true },
+          { title:'Premium διαλογισμός', desc:'10′ καθοδηγούμενος οραματισμός.', locked:true }
+        ]
+      }
+    };
+
+    // Κατάσταση
+    let state = { mood:'calm', moods:[], journal:[], memories:[], answers:[], customMoods:[], questionIndex:0, actionDone:{}, actionNotes:{} };
+    let focusArea = 'mind';
+
+    function registerCustomMood(key, label, color){
+      if(!key || !label || !color) return;
+      MOODS[key] = { label, accent: color };
+      MOOD_THEMES[key] = themeFromAccent(color);
+    }
+    function refreshMoodMaps(){
+      MOODS = { ...BASE_MOODS };
+      MOOD_THEMES = { ...BASE_MOOD_THEMES };
+      (state.customMoods||[]).forEach(m=> registerCustomMood(m.key, m.label, m.color));
+    }
+
+    function saveState(){
+      localStorage.setItem(userKey('mood'), state.mood);
+      localStorage.setItem(userKey('moods'), JSON.stringify(state.moods));
+      localStorage.setItem(userKey('journal'), JSON.stringify(state.journal));
+      localStorage.setItem(userKey('memories'), JSON.stringify(state.memories));
+      localStorage.setItem(userKey('answers'), JSON.stringify(state.answers));
+      localStorage.setItem(userKey('customMoods'), JSON.stringify(state.customMoods));
+      localStorage.setItem(userKey('questionIndex'), String(state.questionIndex));
+      localStorage.setItem(userKey('actionDone'), JSON.stringify(state.actionDone));
+      localStorage.setItem(userKey('actionNotes'), JSON.stringify(state.actionNotes));
+    }
+    function loadLocal(){
+      state.mood   = localStorage.getItem(userKey('mood')) || 'calm';
+      state.moods  = JSON.parse(localStorage.getItem(userKey('moods')) || '[]');
+      state.journal= JSON.parse(localStorage.getItem(userKey('journal')) || '[]');
+      state.memories= JSON.parse(localStorage.getItem(userKey('memories')) || '[]');
+      state.answers= JSON.parse(localStorage.getItem(userKey('answers')) || '[]');
+      state.customMoods = JSON.parse(localStorage.getItem(userKey('customMoods')) || '[]');
+      state.actionDone = JSON.parse(localStorage.getItem(userKey('actionDone')) || '{}');
+      state.actionNotes = JSON.parse(localStorage.getItem(userKey('actionNotes')) || '{}');
+      const savedIdx = parseInt(localStorage.getItem(userKey('questionIndex')) || '0', 10);
+      state.questionIndex = Number.isFinite(savedIdx) ? (savedIdx % SELF_QUESTIONS.length) : 0;
+      refreshMoodMaps();
+      if(!MOODS[state.mood]) state.mood = 'calm';
+    }
+
+    // Cloud sync (ασφαλές για anon key)
+    async function syncToCloud() {
+      if (!supabase || !currentUser) return;
+      const email = currentUser.email;
+      // moods
+      for (const m of state.moods) {
+        await supabase.from("moods").upsert({ user_email: email, mood: m.mood, note: m.note, time: m.time });
+      }
+      // journal
+      for (const j of state.journal) {
+        await supabase.from("journal").upsert({ user_email: email, text: j.text, created_at: j.date });
+      }
+    }
+    async function loadFromCloud() {
+      if (!supabase || !currentUser) return;
+      const email = currentUser.email;
+      const { data: moods } = await supabase.from("moods").select("*").eq("user_email", email).order("time");
+      const { data: journal } = await supabase.from("journal").select("*").eq("user_email", email).order("created_at");
+      if (moods) state.moods = moods.map(m=>({ mood:m.mood, note:m.note, time:m.time }));
+      if (journal) state.journal = journal.map(j=>({ text:j.text, date:j.created_at }));
+      renderTimeline(); renderMind(); renderHome();
+    }
+
+    // Helpers
+    function $(s){ return document.querySelector(s) }
+    function $$(s){ return [...document.querySelectorAll(s)] }
+    function randomOf(arr){ return arr[Math.floor(Math.random()*arr.length)] }
+    function escapeHtml(s){ return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m])); }
+    function nowHHMM(){ const d=new Date(); return d.toTimeString().slice(0,5); }
+    function hexToRgb(hex){
+      const norm = hex.replace('#','');
+      const val = norm.length===3 ? norm.split('').map(c=>c+c).join('') : norm;
+      const num = parseInt(val,16);
+      return { r:(num>>16)&255, g:(num>>8)&255, b:num&255 };
+    }
+    function rgbToHex({r,g,b}){
+      return '#'+[r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('');
+    }
+    function lighten(hex, amt){
+      const {r,g,b} = hexToRgb(hex);
+      const mix = (c)=> Math.min(255, Math.round(c + (255 - c)*amt));
+      return rgbToHex({ r:mix(r), g:mix(g), b:mix(b) });
+    }
+    function inkFromAccent(hex){
+      const {r,g,b} = hexToRgb(hex);
+      const lum = (0.299*r + 0.587*g + 0.114*b)/255;
+      return lum > 0.6 ? '#1f1f1f' : '#f5f5f5';
+    }
+    function themeFromAccent(accent){
+      return {
+        bgFrom: lighten(accent, 0.8),
+        bgVia:  lighten(accent, 0.7),
+        bgTo:   lighten(accent, 0.55),
+        ink:    inkFromAccent(accent),
+        accent
+      };
+    }
+    function currentQuestion(){
+      const idx = (state.questionIndex || 0) % SELF_QUESTIONS.length;
+      return { text: SELF_QUESTIONS[idx], idx };
+    }
+    function actionKey(area, act){ return `${area}:${act.title}`; }
+    function isActionDone(mood, area, key){
+      return !!(state.actionDone?.[mood]?.[area]?.[key]);
+    }
+    function toggleAction(area, act){
+      const mood = state.mood;
+      const key = actionKey(area, act);
+      if(!state.actionDone[mood]) state.actionDone[mood] = {};
+      if(!state.actionDone[mood][area]) state.actionDone[mood][area] = {};
+      state.actionDone[mood][area][key] = !state.actionDone[mood][area][key];
+      saveState();
+      renderActions(area);
+    }
+    function saveActionNote(area, act, value){
+      const mood = state.mood;
+      const key = actionKey(area, act);
+      if(!state.actionNotes[mood]) state.actionNotes[mood] = {};
+      if(!state.actionNotes[mood][area]) state.actionNotes[mood][area] = {};
+      state.actionNotes[mood][area][key] = value;
+      saveState();
+    }
+    function actionNoteValue(area, act){
+      return state.actionNotes?.[state.mood]?.[area]?.[actionKey(area, act)] || '';
+    }
+
+    // Μικρές προτάσεις ανά διάθεση
+    function renderActions(area){
+      const wrap = document.querySelector(`.action-grid[data-actions="${area}"]`);
+      if(!wrap) return;
+      const actions = MOOD_ACTIONS[state.mood]?.[area] || [];
+      wrap.innerHTML = '';
+      if(!actions.length){ wrap.innerHTML = '<p class="muted">Δεν υπάρχουν προτάσεις για αυτή τη διάθεση.</p>'; return; }
+      actions.forEach(act=>{
+        const done = isActionDone(state.mood, area, actionKey(area, act));
+        const card = document.createElement('div');
+        card.className = `action-card${done?' done':''}${act.locked?' locked':''}`;
+        card.innerHTML = `${act.tag?`<div class="action-tag">${act.tag}</div>`:''}<div class="action-title">${act.locked?'<span class="action-lock">🔒 Premium</span>': ''}${act.title}</div><div class="action-desc">${act.desc}</div><div class="action-check">${act.locked?'🔒':(done?'✓':'•')}</div>`;
+        if(act.input){
+          const note = document.createElement('textarea');
+          note.className = 'action-note';
+          note.placeholder = 'Γράψε εδώ ό,τι κατέγραψες από την άσκηση…';
+          note.value = actionNoteValue(area, act);
+          note.addEventListener('input', ()=> saveActionNote(area, act, note.value));
+          card.appendChild(note);
+        }
+        if(!act.locked){
+          card.addEventListener('click', (ev)=>{
+            if(ev.target.tagName==='TEXTAREA') return;
+            toggleAction(area, act);
+          });
+        }
+        wrap.appendChild(card);
+      });
+    }
+    function renderActionsAll(){ ['mind','body','soul'].forEach(renderActions); }
+
+    function renderMusic(){
+      const list = $('#musicList');
+      if(!list) return;
+      list.innerHTML = '';
+      MUSIC_LINKS.forEach(item=>{
+        const wrap = document.createElement('li');
+        wrap.innerHTML = `<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+          <div>
+            <div class="action-title" style="margin:0">${item.title}</div>
+            <div class="muted">${item.note} • ταιριάζει με: ${item.mood.map(m=>MOODS[m]?.label||m).join(', ')}</div>
+          </div>
+          <a class="btn btn-primary" href="${item.url}" target="_blank" rel="noopener">Άνοιγμα</a>
+        </div>`;
+        list.appendChild(wrap);
+      });
+    }
+
+    // Views
+    const views = {
+      home: $('#view-home'), journal: $('#view-journal'), music: $('#view-music'), chat: $('#view-chat')
+    };
+    function setTab(tab){
+      $$('#tabs .tab').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
+      Object.keys(views).forEach(k=>{ views[k].style.display = (k===tab)?'grid':'none'; });
+      if(tab==='journal') renderJournalAll();
+      if(tab==='music') renderMusic();
+    }
+
+    // Theme & TIPS
+    function updateThemeColor(){
+      const meta = document.querySelector('meta[name="theme-color"]');
+      if(!meta) return;
+      const accent = getComputedStyle(document.documentElement).getPropertyValue('--bg-to').trim() || '#A3B18A';
+      meta.setAttribute('content', accent);
+    }
+    function setThemeVariables(theme){
+      const root = document.documentElement;
+      root.style.setProperty('--bg-from', theme.bgFrom);
+      root.style.setProperty('--bg-via', theme.bgVia);
+      root.style.setProperty('--bg-to', theme.bgTo);
+      root.style.setProperty('--ink', theme.ink);
+      root.style.setProperty('--accent', theme.accent);
+    }
+    function applyTheme(mood){
+      const theme = MOOD_THEMES[mood] || MOOD_THEMES.calm;
+      setThemeVariables(theme);
+      document.documentElement.setAttribute('data-mood', mood);
+      $('#moodPill').textContent = `Διάθεση: ${MOODS[mood]?.label || '—'}`;
+      renderMoodTips();
+      renderActionsAll();
+      renderCalmCard();
+      updateThemeColor();
+    }
+    function pickTip(mood, area){
+      const list = (MOOD_TIPS[mood] && MOOD_TIPS[mood][area]) || [];
+      return list.length ? randomOf(list) : "";
+    }
+    function renderMoodTips(){
+      $('#homeTip').textContent = pickTip(state.mood,'home') || $('#homeTip').textContent;
+      $('#mindTip').textContent = pickTip(state.mood,'mind') || $('#mindTip').textContent;
+      $('#bodyTip').textContent = pickTip(state.mood,'body') || $('#bodyTip').textContent;
+      $('#soulTip').textContent = pickTip(state.mood,'soul') || $('#soulTip').textContent;
+    }
+
+    // Timeline
+    function renderTimeline(){
+      const tl = $('#moodTimeline'); tl.innerHTML = '';
+      state.moods.slice(-6).forEach(item=>{
+        const el = document.createElement('div');
+        el.className='tl-item';
+        el.innerHTML = `<span class="tl-dot"></span><span>${item.time}</span> • <b>${MOODS[item.mood].label}</b>${item.note?` — <span class="muted">${escapeHtml(item.note)}</span>`:''}`;
+        tl.appendChild(el);
+      });
+    }
+
+    function renderMoodSummary(){
+      const currentLabel = MOODS[state.mood]?.label || '—';
+      const current = $('#moodCurrent');
+      const notePreview = $('#moodNotePreview');
+      const lastText = $('#moodLast');
+      const lastTime = $('#moodLastTime');
+      const total = $('#moodEntriesCount');
+
+      if(current) current.textContent = currentLabel;
+      if(total) total.textContent = state.moods.length;
+
+      const last = state.moods.slice(-1)[0];
+      if(last){
+        lastText.textContent = MOODS[last.mood]?.label || currentLabel;
+        lastTime.textContent = `Σήμερα ${last.time}`;
+        notePreview.textContent = last.note ? `Σχόλιο: ${last.note}` : 'Χωρίς σχόλιο';
+      }else{
+        lastText.textContent = 'Καμία καταγραφή ακόμη';
+        lastTime.textContent = 'Καταχώρησε το πώς νιώθεις για να ξεκινήσει το timeline';
+        notePreview.textContent = 'Πρόσθεσε ένα σύντομο σχόλιο όταν διαλέγεις διάθεση.';
+      }
+    }
+
+    function renderCalmCard(){
+      const card = $('#calmCard');
+      if(!card) return;
+      card.style.display = CALM_ONLY_MOODS.includes(state.mood) ? 'block' : 'none';
+    }
+
+    function renderFocus(){
+      renderActionsAll();
+      $$('.focus-tab').forEach(btn=>{
+        const isActive = btn.dataset.focus === focusArea;
+        btn.classList.toggle('active', isActive);
+      });
+      $$('.focus-panel').forEach(panel=>{
+        panel.style.display = (panel.dataset.focus===focusArea)?'block':'none';
+      });
+    }
+
+    let quoteTimer = null;
+    function refreshQuote(){ const q = randomOf(QUOTES); $('#quote').textContent = '“'+q+'”'; }
+    function refreshAffirm(){ $('#affirm').textContent = 'Φράση ενδυνάμωσης: ' + randomOf(AFFIRM); }
+    function startQuoteLoop(){
+      refreshQuote(); refreshAffirm();
+      if(quoteTimer) clearInterval(quoteTimer);
+      quoteTimer = setInterval(refreshQuote, 300000);
+    }
+
+    // Home
+    function renderQuestion(){
+      const { text, idx } = currentQuestion();
+      $('#dailyQ').textContent = text;
+      const step = $('#questionStep');
+      if(step) step.textContent = `${idx+1}/${SELF_QUESTIONS.length}`;
+    }
+    function stepQuestion(delta){
+      const total = SELF_QUESTIONS.length;
+      state.questionIndex = (state.questionIndex + delta + total) % total;
+      saveState();
+      renderQuestion();
+    }
+    function renderHome(){
+      refreshQuote();
+      refreshAffirm();
+      renderQuestion();
+
+      const wrap = $('#answersList'); wrap.innerHTML = '';
+      state.answers.slice(0,3).forEach(a=>{
+        const li = document.createElement('li');
+        li.innerHTML = `<small class="muted">${new Date(a.date).toLocaleString()}</small><br/>
+          <div style="font-size:13px;color:#555">${a.q}</div><div>${escapeHtml(a.text)}</div>`;
+        wrap.appendChild(li);
+      });
+
+      renderMoodSummary();
+      renderTimeline();
+      renderCalmCard();
+    }
+
+    // Mind
+    function renderMind(){
+      $('#journalCount').textContent = `${state.journal.length} καταχωρήσεις`;
+      const ul = $('#journalList'); ul.innerHTML = '';
+      state.journal.forEach(j=>{
+        const li = document.createElement('li');
+        li.innerHTML = `<small class="muted">${new Date(j.date).toLocaleString()}</small><div>${escapeHtml(j.text)}</div>`;
+        ul.appendChild(li);
+      });
+    }
+
+    // Journal All
+    function renderJournalAll(){
+      const q = ($('#searchAll')?.value || '').toLowerCase();
+      const f = $('#typeFilter')?.value || 'all';
+      const combined = [
+        ...state.journal.map(j=>({type:'thought', date:j.date, text:j.text, id:j.id})),
+        ...state.answers.map(a=>({type:'note', date:a.date, text:`${a.q}\n${a.text}`, id:a.id})),
+        ...state.memories.map(m=>({type:'memory', date:m.date, text:m.text, id:m.id}))
+      ].sort((a,b)=>(b.date).localeCompare(a.date));
+      let items = combined;
+      if(f!=='all') items = items.filter(it=>it.type===f);
+      if(q) items = items.filter(it=>(it.text||'').toLowerCase().includes(q));
+
+      const ul = $('#journalAllList'); ul.innerHTML='';
+      const empty = $('#journalEmpty');
+      if(items.length===0){ empty.style.display='block'; return; }
+      empty.style.display='none';
+
+      items.forEach(it=>{
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+            <div style="flex:1">
+              <div class="muted" style="margin-bottom:4px">${it.type==='thought'?'Σκέψη':it.type==='note'?'Σημείωση':'Ανάμνηση'} — ${new Date(it.date).toLocaleString()}</div>
+              <div style="white-space:pre-wrap">${escapeHtml(it.text||'')}</div>
+            </div>
+            <button class="btn btn-danger" data-id="${it.id}">Διαγραφή</button>
+          </div>`;
+        ul.appendChild(li);
+      });
+
+      $$('#journalAllList .btn-danger').forEach(b=>{
+        b.addEventListener('click', ()=>{
+          const id = b.dataset.id;
+          state.journal = state.journal.filter(x=>x.id!==id);
+          state.answers = state.answers.filter(x=>x.id!==id);
+          state.memories = state.memories.filter(x=>x.id!==id);
+          saveState(); syncToCloud(); renderMind(); renderHome(); renderJournalAll();
+        });
+      });
+    }
+
+    function renderMemories(){
+      const list = $('#memoriesList');
+      const count = $('#memoryCount');
+      if(!list || !count) return;
+      list.innerHTML = '';
+      count.textContent = `${state.memories.length} σημειώσεις`;
+
+      if(!state.memories.length){
+        const li = document.createElement('li');
+        li.innerHTML = '<span class="muted">Δεν έχεις σημειώσει ακόμη κάτι. Γράψε μια φράση και αποθήκευσέ την.</span>';
+        list.appendChild(li);
+        return;
+      }
+
+      state.memories.forEach(m=>{
+        const li = document.createElement('li');
+        li.innerHTML = `<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+            <div style="flex:1">
+              <div class="muted" style="margin-bottom:4px">Ανάμνηση — ${new Date(m.date).toLocaleString()}</div>
+              <div style="white-space:pre-wrap">${escapeHtml(m.text)}</div>
+            </div>
+            <button class="btn btn-danger" data-id="${m.id}">Διαγραφή</button>
+          </div>`;
+        list.appendChild(li);
+      });
+
+      $$('#memoriesList .btn-danger').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          state.memories = state.memories.filter(m=>m.id!==btn.dataset.id);
+          saveState(); renderMemories(); renderJournalAll();
+        });
+      });
+    }
+
+    function memoriesAsText(){
+      const parts = state.memories.map((m,i)=>`[${i+1}] ${new Date(m.date).toLocaleString()}\n${m.text}`);
+      return parts.join('\n\n') || 'Καμία σημείωση ακόμη.';
+    }
+
+    function downloadMemories(){
+      const blob = new Blob([memoriesAsText()], { type:'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'slow-aura-notes.txt';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function emailMemories(){
+      const body = encodeURIComponent(memoriesAsText());
+      window.location.href = `mailto:?subject=Σημειώσεις%20Slow%20Aura&body=${body}`;
+    }
+
+    // Chat (AI)
+    function chatAdd(role, text){
+      const wrap = $('#chatLog'); const div = document.createElement('div');
+      div.className = (role==='user')?'bubble-u':'bubble-b';
+      div.textContent = text; wrap.appendChild(div); wrap.scrollTop = wrap.scrollHeight;
+    }
+    async function chatSendMessage(text){
+      chatAdd('user', text);
+      try{
+        const res = await fetch('/.netlify/functions/chat', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ mood: state.mood, message: text })
+        });
+        const { reply } = await res.json();
+        chatAdd('bot', reply || "Σε άκουσα. Θέλεις να το πάρουμε βήμα-βήμα;");
+      }catch(e){
+        console.warn('Σφάλμα συνομιλίας', e);
+        chatAdd('bot', "Δεν βρέθηκε ενεργή λειτουργία συνομιλίας. Τρέξε `netlify dev` με τις serverless functions ενεργές ή σύνδεσε το endpoint chat στο Netlify.");
+      }
+    }
+    function initChat(){
+      $('#chatSend').addEventListener('click', ()=>{
+        const val = $('#chatInput').value.trim();
+        if(!val) return; $('#chatInput').value = ''; chatSendMessage(val);
+      });
+      $('#chatInput').addEventListener('keydown',(e)=>{
+        if(e.key==='Enter'){ e.preventDefault(); $('#chatSend').click(); }
+      });
+    }
+
+    // Mood modal
+    const baseMoodOrder = ['calm','grateful','energetic','sad','stressed','tired','confused'];
+    function getMoodOrder(){
+      return [...baseMoodOrder, ...(state.customMoods||[]).map(m=>m.key)];
+    }
+    function buildMoodGrid(){
+      const wrap = $('#moodGrid'); wrap.innerHTML='';
+      getMoodOrder().forEach(k=>{
+        if(!MOODS[k]) return;
+        const theme = MOOD_THEMES[k] || themeFromAccent(MOODS[k].accent || '#6b705c');
+        const btn = document.createElement('button');
+        btn.className='mood-chip'; btn.textContent = MOODS[k].label;
+        btn.style.borderColor = (k===state.mood)?'var(--accent)':theme.accent;
+        btn.style.background = `linear-gradient(135deg, ${theme.bgFrom}, ${theme.bgTo})`;
+        btn.style.color = theme.accent;
+        btn.addEventListener('click', ()=>{
+          state.mood = k;
+          const note = $('#moodNote').value.trim();
+          state.moods.push({mood:k, time:nowHHMM(), note});
+          $('#moodNote').value='';
+          saveState(); syncToCloud(); applyTheme(k); renderTimeline(); renderMoodSummary(); closeMoodModal();
+        });
+        wrap.appendChild(btn);
+      });
+    }
+    function addCustomMood(){
+      const label = ($('#customMoodLabel')?.value || '').trim();
+      const color = $('#customMoodColor')?.value || '#8e7cc3';
+      if(!label) return;
+      const key = `custom-${crypto.randomUUID()}`;
+      const entry = { key, label, color };
+      state.customMoods.push(entry);
+      registerCustomMood(key, label, color);
+      saveState();
+      if($('#customMoodLabel')) $('#customMoodLabel').value='';
+      buildMoodGrid();
+    }
+    function openMoodModal(){ buildMoodGrid(); $('#moodModal').classList.add('show'); }
+    function closeMoodModal(){ $('#moodModal').classList.remove('show'); }
+
+    // Init Identity
+    function reflectAuthUI(){
+      const badge = $('#userBadge'); const lb = $('#loginBtn'); const lo = $('#logoutBtn');
+      if(currentUser){ badge.textContent = `Συνδέθηκες: ${currentUser.email}`; lb.style.display='none'; lo.style.display='inline-block'; }
+      else { badge.textContent='Επισκέπτης'; lb.style.display='inline-block'; lo.style.display='none'; }
+    }
+    function initIdentity(){
+      if(!identity){
+        $('#userBadge').textContent = 'Η σύνδεση θέλει Netlify Identity (τρέξε "netlify dev")';
+        $('#loginBtn').disabled = true;
+        return;
+      }
+      identity.on('init', (u)=>{ currentUser = u?{email:u.email,id:u.id}:null; reflectAuthUI(); loadLocal(); applyTheme(state.mood); renderAll(); if(currentUser) loadFromCloud(); });
+      identity.on('login', (u)=>{ currentUser = {email:u.email,id:u.id}; reflectAuthUI(); loadLocal(); applyTheme(state.mood); renderAll(); loadFromCloud(); });
+      identity.on('logout', ()=>{ currentUser=null; reflectAuthUI(); loadLocal(); applyTheme(state.mood); renderAll(); });
+      identity.init();
+      $('#loginBtn').addEventListener('click', ()=> identity.open('login'));
+      $('#logoutBtn').addEventListener('click', ()=> identity.logout());
+    }
+
+    // Setup
+    function renderAll(){ renderHome(); renderMind(); renderMoodTips(); renderFocus(); renderMemories(); renderCalmCard(); }
+    $$('#tabs .tab[data-tab]').forEach(btn=> btn.addEventListener('click', ()=> setTab(btn.dataset.tab)));
+    $('#moodNav').addEventListener('click', openMoodModal);
+    $('#calmNowBtn').addEventListener('click', ()=>{ const ov=$('#calmOverlay'); ov.classList.add('show'); setTimeout(()=>ov.classList.remove('show'),15000); });
+    $('#jumpToMood').addEventListener('click', openMoodModal);
+    $('#addCustomMood').addEventListener('click', addCustomMood);
+    $('#closeMood').addEventListener('click', closeMoodModal);
+    $('#moodModal').addEventListener('click', (e)=>{ if(e.target.id==='moodModal') closeMoodModal(); });
+    $$('.focus-tab').forEach(btn=> btn.addEventListener('click', ()=>{ focusArea = btn.dataset.focus; renderFocus(); }));
+    $('#nextQuestion').addEventListener('click', ()=> stepQuestion(1));
+    $('#prevQuestion').addEventListener('click', ()=> stepQuestion(-1));
+    $('#saveAnswer').addEventListener('click', ()=>{
+      const q=currentQuestion().text; const text=$('#ansInput').value.trim(); if(!text) return;
+      state.answers.unshift({id:crypto.randomUUID(), date:new Date().toISOString(), q, text});
+      $('#ansInput').value=''; saveState(); syncToCloud(); renderHome(); renderJournalAll();
+    });
+    $('#saveJournal').addEventListener('click', ()=>{
+      const t=$('#journalText').value.trim(); if(!t) return;
+      state.journal.unshift({id:crypto.randomUUID(), date:new Date().toISOString(), text:t});
+      $('#journalText').value=''; saveState(); syncToCloud(); renderMind(); renderJournalAll();
+    });
+    $('#saveMemory').addEventListener('click', ()=>{
+      const t=$('#memoryText').value.trim(); if(!t) return;
+      state.memories.unshift({id:crypto.randomUUID(), date:new Date().toISOString(), text:t});
+      $('#memoryText').value=''; saveState(); renderMemories(); renderJournalAll();
+    });
+    $('#downloadMemories').addEventListener('click', downloadMemories);
+    $('#emailMemories').addEventListener('click', emailMemories);
+    $('#searchAll').addEventListener('input', renderJournalAll);
+    $('#typeFilter').addEventListener('change', renderJournalAll);
+    $('#year').textContent = new Date().getFullYear();
+
+    // Εκκίνηση
+    setTab('home'); initChat();
+    await initSupabase();  // φέρνει URL/KEY
+    initIdentity();        // ξεκινά το Identity και με το login φορτώνει από cloud
+    loadLocal();           // να έχουμε κάτι άμεσα
+    startQuoteLoop();
+    applyTheme(state.mood);
+    renderAll();
+  </script>
+</body>
+</html>
